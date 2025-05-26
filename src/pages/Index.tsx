@@ -5,6 +5,7 @@ import TimeHistory from '@/components/TimeHistory';
 import Statistics from '@/components/Statistics';
 import StepTimer from '@/components/StepTimer';
 import StepHistory from '@/components/StepHistory';
+import Scramble from '@/components/Scramble';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -160,6 +161,11 @@ const Index = () => {
           <p className="text-xl text-muted-foreground">
             Cronômetro profissional para speedcubing
           </p>
+        </div>
+
+        {/* Scramble Generator */}
+        <div className="mb-8">
+          <Scramble />
         </div>
 
         {/* Tabs for different timer modes */}
