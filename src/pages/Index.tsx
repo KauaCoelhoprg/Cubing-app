@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import Timer from '@/components/Timer';
 import TimeHistory from '@/components/TimeHistory';
@@ -18,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import InspectionSettings from '@/components/InspectionSettings';
 
 interface TimeEntry {
   id: number;
@@ -47,16 +47,18 @@ const Index = () => {
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showClearStepsDialog, setShowClearStepsDialog] = useState(false);
 
-  const handleTimeComplete = useCallback((time: number) => {
+  const handleTimeComplete = useCallback((time: number, penalty?: number) => {
+    const finalTime = penalty ? time + penalty : time;
+    
     const newEntry: TimeEntry = {
       id: nextId,
-      time,
+      time: finalTime,
       timestamp: new Date(),
     };
 
     // Verificar se é um novo PB
     const currentBest = times.length > 0 ? Math.min(...times.map(t => t.time)) : Infinity;
-    if (time < currentBest) {
+    if (finalTime < currentBest) {
       newEntry.isPB = true;
       
       // Remover flag PB de entradas anteriores
@@ -68,7 +70,8 @@ const Index = () => {
     setTimes(prevTimes => [...prevTimes, newEntry]);
     setNextId(prev => prev + 1);
 
-    console.log(`Novo tempo registrado: ${(time / 1000).toFixed(2)}s`, { isPB: newEntry.isPB });
+    const penaltyText = penalty ? ` (com penalidade +${penalty/1000}s)` : '';
+    console.log(`Novo tempo registrado: ${(finalTime / 1000).toFixed(2)}s${penaltyText}`, { isPB: newEntry.isPB });
   }, [times, nextId, setTimes, setNextId]);
 
   const handleStepComplete = useCallback((stepTimes: StepTime[]) => {
@@ -166,6 +169,11 @@ const Index = () => {
         {/* Scramble Generator */}
         <div className="mb-8">
           <Scramble />
+        </div>
+
+        {/* Inspection Settings */}
+        <div className="mb-8">
+          <InspectionSettings />
         </div>
 
         {/* Tabs for different timer modes */}
