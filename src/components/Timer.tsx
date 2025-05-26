@@ -1,7 +1,6 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Play, Stop } from 'lucide-react';
+import { Play, Square } from 'lucide-react';
 
 interface TimerProps {
   onTimeComplete: (time: number) => void;
@@ -105,7 +104,7 @@ const Timer = ({ onTimeComplete }: TimerProps) => {
       >
         {isRunning ? (
           <>
-            <Stop className="mr-2 h-6 w-6" />
+            <Square className="mr-2 h-6 w-6" />
             Parar
           </>
         ) : (

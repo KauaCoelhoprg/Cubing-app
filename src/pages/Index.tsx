@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import Timer from '@/components/Timer';
 import TimeHistory from '@/components/TimeHistory';
@@ -81,7 +80,7 @@ const Index = () => {
       </div>
 
       {/* Custom scrollbar styles */}
-      <style jsx global>{`
+      <style>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
