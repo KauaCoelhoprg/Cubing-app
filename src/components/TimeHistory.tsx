@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -30,7 +29,9 @@ const TimeHistory = ({ times, onDeleteTime, onClearAll }: TimeHistoryProps) => {
     return seconds.toFixed(2);
   };
 
-  const formatTimestamp = (date: Date): string => {
+  const formatTimestamp = (timestamp: Date | string): string => {
+    // Convert to Date object if it's a string (from localStorage)
+    const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
     return date.toLocaleTimeString('pt-BR', { 
       hour: '2-digit', 
       minute: '2-digit' 
