@@ -3,6 +3,17 @@ import Timer from '@/components/Timer';
 import TimeHistory from '@/components/TimeHistory';
 import Statistics from '@/components/Statistics';
 import useLocalStorage from '@/hooks/useLocalStorage';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface TimeEntry {
   id: number;
@@ -14,6 +25,7 @@ interface TimeEntry {
 const Index = () => {
   const [times, setTimes] = useLocalStorage<TimeEntry[]>('cubeTimer_times', []);
   const [nextId, setNextId] = useLocalStorage<number>('cubeTimer_nextId', 1);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const handleTimeComplete = useCallback((time: number) => {
     const newEntry: TimeEntry = {
@@ -38,6 +50,32 @@ const Index = () => {
 
     console.log(`Novo tempo registrado: ${(time / 1000).toFixed(2)}s`, { isPB: newEntry.isPB });
   }, [times, nextId, setTimes, setNextId]);
+
+  const handleDeleteTime = useCallback((id: number) => {
+    setTimes(prevTimes => {
+      const updatedTimes = prevTimes.filter(time => time.id !== id);
+      
+      // Recalcular PB após exclusão
+      if (updatedTimes.length > 0) {
+        const newBest = Math.min(...updatedTimes.map(t => t.time));
+        return updatedTimes.map(entry => ({
+          ...entry,
+          isPB: entry.time === newBest
+        }));
+      }
+      
+      return updatedTimes;
+    });
+    
+    console.log(`Tempo com ID ${id} foi excluído`);
+  }, [setTimes]);
+
+  const handleClearAll = useCallback(() => {
+    setTimes([]);
+    setNextId(1);
+    setShowClearDialog(false);
+    console.log('Todos os tempos foram excluídos');
+  }, [setTimes, setNextId]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95">
@@ -66,7 +104,27 @@ const Index = () => {
 
           {/* Time History */}
           <div>
-            <TimeHistory times={times} />
+            <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+              <TimeHistory 
+                times={times} 
+                onDeleteTime={handleDeleteTime}
+                onClearAll={() => setShowClearDialog(true)}
+              />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Tem certeza que deseja excluir todos os tempos? Esta ação não pode ser desfeita.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleClearAll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    Excluir todos
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </div>
 
