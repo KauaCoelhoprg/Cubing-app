@@ -160,4 +160,3 @@ const InspectionSettings = () => {
 };
 
 export default InspectionSettings;
-export type { InspectionConfig };

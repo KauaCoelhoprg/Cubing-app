@@ -1,9 +1,11 @@
+
 import { useState, useCallback } from 'react';
 import Timer from '@/components/Timer';
 import TimeHistory from '@/components/TimeHistory';
 import Statistics from '@/components/Statistics';
 import StepTimer from '@/components/StepTimer';
 import StepHistory from '@/components/StepHistory';
+import IndividualStepTimers from '@/components/IndividualStepTimers';
 import Scramble from '@/components/Scramble';
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -178,9 +180,10 @@ const Index = () => {
 
         {/* Tabs for different timer modes */}
         <Tabs defaultValue="standard" className="mb-8">
-          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
+          <TabsList className="grid w-full grid-cols-3 max-w-lg mx-auto">
             <TabsTrigger value="standard">Timer Padrão</TabsTrigger>
             <TabsTrigger value="steps">Timer por Etapas</TabsTrigger>
+            <TabsTrigger value="individual">Cronômetros Individuais</TabsTrigger>
           </TabsList>
           
           <TabsContent value="standard" className="space-y-8">
@@ -254,16 +257,26 @@ const Index = () => {
               </AlertDialog>
             </div>
           </TabsContent>
+
+          <TabsContent value="individual" className="space-y-8">
+            {/* Individual Step Timers */}
+            <div className="mb-12">
+              <IndividualStepTimers />
+            </div>
+          </TabsContent>
         </Tabs>
 
         {/* Instructions */}
         <div className="mt-12 text-center">
-          <div className="inline-flex items-center space-x-4 text-muted-foreground">
+          <div className="inline-flex items-center space-x-4 text-muted-foreground flex-wrap">
             <kbd className="px-3 py-1 bg-muted rounded text-sm font-mono">SPACE</kbd>
             <span>para timer padrão</span>
             <span>•</span>
             <kbd className="px-3 py-1 bg-muted rounded text-sm font-mono">ENTER</kbd>
             <span>para timer por etapas</span>
+            <span>•</span>
+            <kbd className="px-3 py-1 bg-muted rounded text-sm font-mono">C/F/O/P</kbd>
+            <span>para cronômetros individuais</span>
           </div>
         </div>
       </div>
